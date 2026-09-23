@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudo de Renda Variável — Clientes William Porto | Matheus Zanol</title>
+<style>
+  :root{
+    --bg-0:#05070d;
+    --bg-1:#0a1020;
+    --bg-2:#0f1628;
+    --bg-3:#131c32;
+    --line:rgba(255,255,255,.08);
+    --line-strong:rgba(255,255,255,.14);
+    --text:#e6ecf5;
+    --text-dim:#9aa3b4;
+    --text-mute:#6b7385;
+    --gold:#f5b638;
+    --gold-2:#e69a1a;
+    --orange:#ff8a3d;
+    --blue:#4aa3ff;
+    --blue-2:#2b6cff;
+    --green:#3ddc84;
+    --red:#ff5c5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg-0);color:var(--text);font-family:'Inter','SF Pro Display','Segoe UI',system-ui,-apple-system,Arial,sans-serif;font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased}
+  body{
+    background:
+      radial-gradient(1200px 800px at 85% -10%, rgba(245,182,56,.10), transparent 60%),
+      radial-gradient(1000px 700px at -10% 20%, rgba(74,163,255,.08), transparent 60%),
+      linear-gradient(180deg, #05070d 0%, #060a14 100%);
+    min-height:100vh;
+    padding:56px 24px 96px;
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* Rótulo caixa alta */
+  .eyebrow{
+    display:inline-block;
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;
+    padding:6px 12px;border:1px solid rgba(245,182,56,.35);
+    border-radius:999px;background:rgba(245,182,56,.06);
+  }
+  h1{font-size:44px;line-height:1.1;font-weight:700;letter-spacing:-.02em;margin-top:18px}
+  h1 .accent{color:var(--gold)}
+  h2{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-top:8px}
+  h2 .accent{color:var(--gold)}
+  h3{font-size:18px;font-weight:600;letter-spacing:-.005em}
+  p{color:var(--text-dim);font-size:15px}
+  .lead{color:#c9d2e3;font-size:17px;line-height:1.7;max-width:820px;margin-top:20px}
+
+  /* Cabeçalho */
+  header.hero{
+    padding:44px 40px 56px;
+    border:1px solid var(--line);
+    border-radius:24px;
+    background:linear-gradient(180deg, rgba(19,28,50,.85), rgba(10,16,32,.85));
+    position:relative;overflow:hidden;
+  }
+  header.hero::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(700px 240px at 90% 0%, rgba(245,182,56,.14), transparent 60%);
+  }
+  .meta-row{
+    margin-top:32px;display:flex;flex-wrap:wrap;gap:24px 40px;
+    padding-top:24px;border-top:1px solid var(--line);
+    color:var(--text-dim);font-size:13px;letter-spacing:.04em;
+  }
+  .meta-row b{color:var(--text);font-weight:600;letter-spacing:0}
+  .meta-row .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:10px;vertical-align:middle}
+
+  /* Seções */
+  section{margin-top:56px}
+  .section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px;flex-wrap:wrap}
+  .section-head .title{max-width:720px}
+  .section-head p{margin-top:10px}
+
+  /* Cards de números */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  }
+  .stat{
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 22px 24px;
+    position:relative;overflow:hidden;
+  }
+  .stat .label{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--text-mute);font-weight:600;
+  }
+  .stat .value{
+    margin-top:14px;font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--text);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .value.gold{color:var(--gold)}
+  .stat .value.blue{color:var(--blue)}
+  .stat .value.green{color:var(--green)}
+  .stat .sub{margin-top:8px;font-size:13px;color:var(--text-dim)}
+  .stat .glow{
+    position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle, rgba(245,182,56,.20), transparent 60%);
+    pointer-events:none;
+  }
+  .stat.blueglow .glow{background:radial-gradient(circle, rgba(74,163,255,.20), transparent 60%)}
+  .stat.greenglow .glow{background:radial-gradient(circle, rgba(61,220,132,.18), transparent 60%)}
+
+  /* Tabela consolidada */
+  .table-wrap{
+    margin-top:8px;border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  }
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{
+    text-align:left;font-weight:600;color:var(--text-mute);
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    padding:16px 20px;background:rgba(255,255,255,.02);
+    border-bottom:1px solid var(--line-strong);
+  }
+  tbody td{
+    padding:18px 20px;border-bottom:1px solid var(--line);
+    color:var(--text);font-variant-numeric:tabular-nums;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:rgba(255,255,255,.02)}
+  tbody td.name{color:var(--text);font-weight:600}
+  tbody td.account{color:var(--text-mute);font-size:13px}
+  tbody td.gold{color:var(--gold);font-weight:600}
+  tbody td.blue{color:var(--blue);font-weight:600}
+  tbody td.dim{color:var(--text-dim)}
+  tfoot td{
+    padding:18px 20px;background:rgba(245,182,56,.06);
+    border-top:1px solid rgba(245,182,56,.25);
+    font-weight:700;color:var(--gold);letter-spacing:.02em;
+  }
+
+  /* Bloco por cliente */
+  .client{
+    margin-top:28px;
+    border:1px solid var(--line);border-radius:22px;
+    background:linear-gradient(180deg, rgba(19,28,50,.75), rgba(10,16,32,.9));
+    overflow:hidden;
+  }
+  .client .head{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+    padding:26px 28px 22px;border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(500px 160px at 100% 0%, rgba(245,182,56,.10), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+    flex-wrap:wrap;
+  }
+  .client .head .who .idx{
+    font-size:11px;letter-spacing:.28em;color:var(--gold);font-weight:600;text-transform:uppercase;
+  }
+  .client .head .who h3{margin-top:6px;font-size:22px}
+  .client .head .who .account{margin-top:6px;font-size:12px;color:var(--text-mute);letter-spacing:.04em}
+  .client .head .money{text-align:right;min-width:220px}
+  .client .head .money .label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mute);font-weight:600}
+  .client .head .money .value{margin-top:6px;font-size:28px;font-weight:700;color:var(--gold);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .client .head .money .sub{margin-top:4px;font-size:12px;color:var(--text-dim)}
+
+  .client .body{padding:22px 28px 28px;display:grid;grid-template-columns:1.15fr 1fr;gap:24px}
+  .card{
+    background:rgba(255,255,255,.02);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+  }
+  .card .label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mute);font-weight:600}
+  .card p{margin-top:10px;font-size:14.5px;color:#d3dae7;line-height:1.65}
+  .card .list{margin-top:10px;font-size:14.5px}
+  .positions{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .positions table{font-size:13.5px}
+  .positions th{padding:12px 16px;font-size:10px}
+  .positions td{padding:12px 16px}
+  .positions .ticker{color:var(--gold);font-weight:700;letter-spacing:.02em}
+  .positions .total{background:rgba(245,182,56,.05);color:var(--gold);font-weight:700}
+
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tag{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--blue);border:1px solid rgba(74,163,255,.35);
+    background:rgba(74,163,255,.06);padding:5px 10px;border-radius:999px;font-weight:600;
+  }
+  .tag.gold{color:var(--gold);border-color:rgba(245,182,56,.35);background:rgba(245,182,56,.06)}
+  .tag.green{color:var(--green);border-color:rgba(61,220,132,.35);background:rgba(61,220,132,.06)}
+
+  .approach{
+    margin-top:22px;padding:20px 22px;border-radius:14px;
+    border:1px dashed rgba(245,182,56,.35);
+    background:rgba(245,182,56,.04);
+  }
+  .approach .label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .approach p{margin-top:10px;color:#d3dae7;font-size:14.5px;line-height:1.65}
+  .approach ul{margin-top:10px;padding-left:20px;color:#d3dae7;font-size:14.5px;line-height:1.75}
+
+  /* Fechamento */
+  .close-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+  .steps{background:linear-gradient(180deg, var(--bg-2), var(--bg-1));border:1px solid var(--line);border-radius:18px;padding:26px 28px}
+  .steps ol{margin-top:16px;padding-left:22px;color:#d3dae7;font-size:15px;line-height:1.75}
+  .steps ol li::marker{color:var(--gold);font-weight:700}
+  .contact{background:linear-gradient(180deg, rgba(245,182,56,.06), rgba(10,16,32,.9));border:1px solid rgba(245,182,56,.25);border-radius:18px;padding:26px 28px}
+  .contact .name{font-size:20px;font-weight:700;margin-top:6px}
+  .contact .role{color:var(--gold);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-top:4px}
+  .contact .line{margin-top:14px;color:var(--text-dim);font-size:14px}
+
+  footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);color:var(--text-mute);font-size:12px;line-height:1.7}
+  footer .brand{color:var(--gold);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+  /* Responsivo */
+  @media (max-width: 900px){
+    body{padding:32px 16px 72px}
+    header.hero{padding:32px 22px}
+    h1{font-size:32px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .client .body{grid-template-columns:1fr}
+    .close-grid{grid-template-columns:1fr}
+    thead th, tbody td{padding:14px 14px}
+  }
+  @media print{
+    body{background:#fff;color:#111;padding:20px}
+    header.hero, .stat, .client, .table-wrap, .steps, .contact{background:#fff !important;border-color:#ddd !important;color:#111 !important}
+    p, .card p, .approach p, .steps ol, .stat .sub, .client .head .money .sub{color:#333 !important}
+    .eyebrow, .stat .value.gold, .client .head .money .value, tbody td.gold, .approach .label, h1 .accent, h2 .accent, .positions .ticker, .contact .role, footer .brand{color:#b5761a !important}
+    .stat .value.blue, tbody td.blue, .tag{color:#1c5fb4 !important}
+    .stat .value.green, .tag.green{color:#0f8a4d !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ CAPA ============ -->
+  <header class="hero">
+    <span class="eyebrow">Resumo do Estudo — Renda Variável</span>
+    <h1>Clientes preparados para <span class="accent">avançar em ações</span>, com consistência e critério.</h1>
+    <p class="lead">
+      Material preparado para alinhamento com a mesa de Renda Variável. A base de clientes está saudável,
+      com carteiras bem estruturadas em renda fixa e agora buscando <strong style="color:#e6ecf5">mais rentabilidade via ações e estruturados</strong>.
+      O objetivo do trabalho conjunto é evoluir em qualidade e retorno — sem abrir mão da preservação de capital,
+      que segue como fundamento não negociável do relacionamento com cada um deles.
+    </p>
+    <div class="meta-row">
+      <div><span class="dot"></span><b>Preparado por</b> &nbsp;·&nbsp; William Porto — Assessor Private</div>
+      <div><span class="dot"></span><b>Para</b> &nbsp;·&nbsp; Matheus Zanol — Especialista de Renda Variável</div>
+      <div><span class="dot"></span><b>Data</b> &nbsp;·&nbsp; 23 de setembro de 2026</div>
+      <div><span class="dot"></span><b>Base</b> &nbsp;·&nbsp; Planilha Matheus Zanol — RV — 22/09/2026</div>
+    </div>
+  </header>
+
+  <!-- ============ VISÃO CONSOLIDADA ============ -->
+  <section>
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">01 &nbsp;·&nbsp; Visão Consolidada</span>
+        <h2>O <span class="accent">case do trabalho conjunto</span> em números.</h2>
+        <p>Cinco clientes qualificados, com apetite validado para renda variável. O volume total endereçado às operações com você já ultrapassa <strong style="color:#e6ecf5">R$ 1,43 milhão</strong>, distribuído entre novos aportes e uma carteira existente a ser rebalanceada.</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="glow"></span>
+        <div class="label">Clientes envolvidos</div>
+        <div class="value gold">5</div>
+        <div class="sub">Todos com relação ativa e briefing alinhado.</div>
+      </div>
+      <div class="stat blueglow">
+        <span class="glow"></span>
+        <div class="label">Volume total em RV</div>
+        <div class="value blue">R$ 1.431.054</div>
+        <div class="sub">Somatório entre aportes novos e carteira a rebalancear.</div>
+      </div>
+      <div class="stat">
+        <span class="glow"></span>
+        <div class="label">Novos aportes a alocar</div>
+        <div class="value gold">R$ 1.063.048</div>
+        <div class="sub">Recursos aguardando estratégia e execução criteriosa.</div>
+      </div>
+      <div class="stat greenglow">
+        <span class="glow"></span>
+        <div class="label">Carteira existente</div>
+        <div class="value green">R$ 368.006</div>
+        <div class="sub">Cliente Fabiano — a rebalancear com 5 a 7 papéis.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px" class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Conta</th>
+            <th>Carteira atual em RV</th>
+            <th>Valor a alocar</th>
+            <th>Objetivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">Fabiano Ferraz Peruzzo</td>
+            <td class="account">3.848.355</td>
+            <td class="blue">R$ 368.006,17</td>
+            <td class="dim">— <span style="font-size:12px">(rebalanceamento)</span></td>
+            <td class="dim">Diversificar carteira, reduzir concentração</td>
+          </tr>
+          <tr>
+            <td class="name">Oziel Quirino Santos</td>
+            <td class="account">16.966.763</td>
+            <td class="dim">—</td>
+            <td class="gold">R$ 200.000,00</td>
+            <td class="dim">Estruturar RV para comparação vs. Bradesco</td>
+          </tr>
+          <tr>
+            <td class="name">Jeferson Rodrigo Jacinto</td>
+            <td class="account">3.830.309</td>
+            <td class="dim">~R$ 130 mil BR + US$ 7 mil ext.</td>
+            <td class="gold">R$ 150.000,00</td>
+            <td class="dim">Construir carteira estruturada e diversificada</td>
+          </tr>
+          <tr>
+            <td class="name">Luis Pires</td>
+            <td class="account">5.541.116</td>
+            <td class="dim">—</td>
+            <td class="gold">R$ 446.000,00</td>
+            <td class="dim">Carteira simples com acompanhamento próximo</td>
+          </tr>
+          <tr>
+            <td class="name">Clovis Chastinet</td>
+            <td class="account">18.352.171</td>
+            <td class="dim">—</td>
+            <td class="gold">R$ 267.047,88</td>
+            <td class="dim">Gestão ativa e novas oportunidades</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Total consolidado — movimentações previstas com a mesa RV</td>
+            <td colspan="2" style="text-align:right">R$ 1.431.054,05</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ CLIENTES ============ -->
+  <section>
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">02 &nbsp;·&nbsp; Um bloco por cliente</span>
+        <h2>Perfil, contexto e <span class="accent">oportunidade</span> — cliente a cliente.</h2>
+        <p>A base a seguir traz o que já foi conversado com cada um. Serve para você desenhar a estratégia com o contexto certo. Os campos de sugestão de abordagem estão abertos para preenchermos em conjunto.</p>
+      </div>
+    </div>
+
+    <!-- Cliente 1: Fabiano -->
+    <article class="client">
+      <div class="head">
+        <div class="who">
+          <div class="idx">Cliente 01</div>
+          <h3>Fabiano Ferraz Peruzzo</h3>
+          <div class="account">Conta 3.848.355 &nbsp;·&nbsp; Carteira ativa em ações</div>
+        </div>
+        <div class="money">
+          <div class="label">Carteira atual em RV</div>
+          <div class="value">R$ 368.006,17</div>
+          <div class="sub">Rebalanceamento (sem novo aporte no momento)</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="card">
+            <div class="label">Contexto do cliente</div>
+            <p>Busca diversificar a carteira de ações, mantendo exposição à renda variável sem aumentar excessivamente o risco.</p>
+            <div class="tag-row">
+              <span class="tag gold">Diversificação</span>
+              <span class="tag">Preservação de capital</span>
+              <span class="tag green">Cliente engajado</span>
+            </div>
+          </div>
+
+          <div class="positions">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ativo</th>
+                  <th>Quantidade</th>
+                  <th style="text-align:right">Financeiro</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="ticker">BBAS3</td><td>14.044</td><td style="text-align:right">R$ 313.602,52</td></tr>
+                <tr><td class="ticker">KLBN3</td><td>13.635</td><td style="text-align:right">R$ 54.403,65</td></tr>
+                <tr class="total"><td colspan="2">Total em ações</td><td style="text-align:right">R$ 368.006,17</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="label">O que foi tratado</div>
+            <p>Atualmente possui concentração em apenas 2 ações. A ideia é avaliar a redução dessas posições e construir uma carteira com 5 a 7 papéis, buscando maior diversificação e novas oportunidades.</p>
+            <p style="margin-top:10px">As compras serão feitas de forma criteriosa e fracionada, sempre respeitando o perfil de risco do cliente e evitando aumentar a exposição de forma desnecessária.</p>
+          </div>
+
+          <div class="approach">
+            <div class="label">Sugestão de abordagem — Matheus</div>
+            <p>Ponto de partida: desconcentração gradual de BBAS3, mantendo o núcleo do que faz sentido, e construção de uma carteira alvo de 5 a 7 papéis com setores complementares.</p>
+            <ul>
+              <li>Definir carteira modelo (bancos, commodities, utilities, consumo) proporcional ao perfil.</li>
+              <li>Plano de rebalanceamento faseado — sem forçar giro em janelas ruins.</li>
+              <li>Espaço em aberto para sua leitura fundamentalista dos papéis.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cliente 2: Oziel -->
+    <article class="client">
+      <div class="head">
+        <div class="who">
+          <div class="idx">Cliente 02</div>
+          <h3>Oziel Quirino Santos</h3>
+          <div class="account">Conta 16.966.763 &nbsp;·&nbsp; Estruturação de carteira nova</div>
+        </div>
+        <div class="money">
+          <div class="label">Valor a alocar em RV</div>
+          <div class="value">R$ 200.000,00</div>
+          <div class="sub">Novo aporte disponível para execução</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="card">
+            <div class="label">Contexto do cliente</div>
+            <p>Perfil focado em resultado. Compara frequentemente a carteira da XP com a que possui no Bradesco.</p>
+            <p style="margin-top:10px">A comparação atual não é equivalente: na XP, a maior parte está em renda fixa; no Bradesco, ele tem exposição à renda variável internacional via fundo Bradesco Bolsa Americana.</p>
+            <div class="tag-row">
+              <span class="tag gold">Foco em performance</span>
+              <span class="tag">Comparação com concorrente</span>
+              <span class="tag green">Alinhamento fechado</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="label">O que foi tratado</div>
+            <p>Foi alinhado que iremos estruturar uma carteira de renda variável na XP, permitindo uma comparação mais adequada entre as estratégias e classes de ativos.</p>
+          </div>
+
+          <div class="approach">
+            <div class="label">Sugestão de abordagem — Matheus</div>
+            <p>O ponto sensível aqui é fazer o cliente sentir que a XP não fica atrás. Vale desenhar uma estrutura que "converse" com o que ele tem no Bradesco (RV internacional), mas com nossa engenharia.</p>
+            <ul>
+              <li>Combo carteira BR de qualidade + exposição internacional (BDRs ou fundo em dólar).</li>
+              <li>Se fizer sentido, um estruturado que ancore o piso do risco no início.</li>
+              <li>Comunicação clara de que vamos jogar no mesmo campo — só com processo melhor.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cliente 3: Jeferson -->
+    <article class="client">
+      <div class="head">
+        <div class="who">
+          <div class="idx">Cliente 03</div>
+          <h3>Jeferson Rodrigo Jacinto</h3>
+          <div class="account">Conta 3.830.309 &nbsp;·&nbsp; Reestruturação de carteira existente</div>
+        </div>
+        <div class="money">
+          <div class="label">Valor a alocar em RV</div>
+          <div class="value">R$ 150.000,00</div>
+          <div class="sub">Já possui posições em ações BR + exterior</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="card">
+            <div class="label">Contexto do cliente</div>
+            <p>Atualmente possui aproximadamente <strong style="color:#e6ecf5">R$ 130 mil em ações no Brasil</strong> e <strong style="color:#e6ecf5">US$ 7 mil em ações no exterior</strong>.</p>
+            <div class="tag-row">
+              <span class="tag gold">Exposição já iniciada</span>
+              <span class="tag">Ações BR + Exterior</span>
+              <span class="tag green">Aberto a estrutura</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="label">O que foi tratado</div>
+            <p>Foi alinhada a construção de uma carteira estruturada e diversificada, com definição clara das posições e estratégia de acompanhamento.</p>
+          </div>
+
+          <div class="approach">
+            <div class="label">Sugestão de abordagem — Matheus</div>
+            <p>Cliente já tem base montada — o valor da mesa aqui é entrar organizando o que existe e propor uma tese consolidada, não empilhando papel.</p>
+            <ul>
+              <li>Diagnóstico da carteira atual (BR + exterior) antes de recomendar novos papéis.</li>
+              <li>Definir carteira alvo + peso ideal por posição para os R$ 150 mil novos.</li>
+              <li>Plano de acompanhamento com revisão trimestral formalizada.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cliente 4: Luis -->
+    <article class="client">
+      <div class="head">
+        <div class="who">
+          <div class="idx">Cliente 04</div>
+          <h3>Luis Pires</h3>
+          <div class="account">Conta 5.541.116 &nbsp;·&nbsp; Maior aporte do grupo</div>
+        </div>
+        <div class="money">
+          <div class="label">Valor a alocar em RV</div>
+          <div class="value">R$ 446.000,00</div>
+          <div class="sub">Aporte mais relevante — atenção redobrada</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="card">
+            <div class="label">Contexto do cliente</div>
+            <p>Busca gerar retorno com ações, sem uma estratégia setorial específica. Prefere uma carteira mais simples e um acompanhamento mais próximo.</p>
+            <div class="tag-row">
+              <span class="tag gold">Simplicidade</span>
+              <span class="tag">Acompanhamento próximo</span>
+              <span class="tag green">Histórico de perdas prévias</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="label">O que foi tratado</div>
+            <p>O cliente não se identifica com a estratégia de algumas carteiras da XP — principalmente por manter posições por longos períodos mesmo em cenários adversos.</p>
+            <p style="margin-top:10px">Já teve perdas relevantes em alguns papéis. Busca simplificar a carteira, ter maior acompanhamento e mais atenção à gestão das posições.</p>
+          </div>
+
+          <div class="approach">
+            <div class="label">Sugestão de abordagem — Matheus</div>
+            <p>Cliente sensível ao histórico. A confiança se ganha com processo visível: menos papéis, tese clara, gatilhos de saída definidos desde o início.</p>
+            <ul>
+              <li>Carteira enxuta (4 a 6 papéis) com convicção alta e menor rotatividade sem propósito.</li>
+              <li>Regras claras de stop e revisão — nada de "segurar por segurar".</li>
+              <li>Ritual quinzenal ou mensal de update — postura ativa, não passiva.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cliente 5: Clovis -->
+    <article class="client">
+      <div class="head">
+        <div class="who">
+          <div class="idx">Cliente 05</div>
+          <h3>Clovis Chastinet</h3>
+          <div class="account">Conta 18.352.171 &nbsp;·&nbsp; Busca de gestão ativa</div>
+        </div>
+        <div class="money">
+          <div class="label">Valor a alocar em RV</div>
+          <div class="value">R$ 267.047,88</div>
+          <div class="sub">Aporte definido — aguardando plano de execução</div>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="card">
+            <div class="label">Contexto do cliente</div>
+            <p>Busca gerar retorno com ações, sem uma estratégia setorial específica.</p>
+            <div class="tag-row">
+              <span class="tag gold">Retorno com qualidade</span>
+              <span class="tag">Abertura de mandato</span>
+              <span class="tag green">Boa relação</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="label">O que foi tratado</div>
+            <p>Busca uma gestão mais próxima da carteira, com recomendações de compra, acompanhamento ativo e identificação de novas oportunidades de investimento.</p>
+          </div>
+
+          <div class="approach">
+            <div class="label">Sugestão de abordagem — Matheus</div>
+            <p>Cliente aberto — dá para posicionar a mesa RV como o diferencial de execução. O valor a alocar comporta uma carteira bem construída sem forçar concentração.</p>
+            <ul>
+              <li>Carteira alvo com 6 a 8 papéis e possibilidade de 1 estruturado como camada tática.</li>
+              <li>Comunicação de teses (por que compramos e quando revisamos) para gerar confiança.</li>
+              <li>Rota clara para incrementos futuros conforme o resultado se materializa.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============ FECHAMENTO ============ -->
+  <section>
+    <div class="section-head">
+      <div class="title">
+        <span class="eyebrow">03 &nbsp;·&nbsp; Próximos passos</span>
+        <h2>Como <span class="accent">avançamos juntos</span> a partir daqui.</h2>
+        <p>A ideia é sair deste material com um plano concreto para cada cliente — nada solto, nada apressado. Consistência antes de agressividade.</p>
+      </div>
+    </div>
+
+    <div class="close-grid">
+      <div class="steps">
+        <div class="label" style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mute);font-weight:600">Cronograma sugerido</div>
+        <ol>
+          <li><strong>Reunião de alinhamento (esta semana)</strong> — revisar cliente a cliente, calibrar leitura e definir prioridades.</li>
+          <li><strong>Definição de carteira alvo por cliente</strong> — de 4 a 8 papéis, respeitando perfil e histórico de cada um.</li>
+          <li><strong>Plano de execução faseado</strong> — janelas de compra, tamanhos por posição e gatilhos de rebalanceamento.</li>
+          <li><strong>Ritual de acompanhamento</strong> — cadência de revisão (mensal ou trimestral) com relatório de posições e teses.</li>
+          <li><strong>Estruturados quando fizerem sentido</strong> — camada tática, sempre com o piso de risco explicado ao cliente.</li>
+        </ol>
+      </div>
+      <div class="contact">
+        <div class="label" style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-mute);font-weight:600">Ponto de contato</div>
+        <div class="name">William Porto</div>
+        <div class="role">Assessor Private — XP</div>
+        <div class="line">Fico à disposição para agendar a próxima reunião e destravar cliente a cliente. Qualquer ajuste na leitura de perfil ou nas prioridades, seguimos alinhados por aqui.</div>
+        <div class="line" style="margin-top:12px;color:var(--gold);font-weight:600">Obrigado pela parceria — vamos entregar consistência.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="brand">Uso interno · XP · William Porto × Matheus Zanol</div>
+    <div style="margin-top:8px">
+      Material preparado para alinhamento entre assessor e mesa de Renda Variável. Não constitui recomendação de investimento e não substitui análise formal.
+      Os valores, contas e contextos aqui apresentados devem ser confirmados junto à mesa e aos sistemas oficiais antes de qualquer execução.
+      Documento sujeito a atualização conforme evolução das conversas com cada cliente.
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
