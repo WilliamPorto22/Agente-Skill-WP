@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --floor: #101a2e;
+    --floor-edge: #1b2a47;
+    --glass-top: #8fb4d9;
+    --glass-bottom: #1c3556;
+    --glass-side: #5f87b3;
+    --glass-side-dark: #14283f;
+    --roof: #2a3d5c;
+    --w: 200px;
+    --d: 200px;
+    --h: 380px;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  /* Cena fixa: câmera em diagonal, sem animação de rotação */
+  .scene {
+    perspective: 1600px;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+  }
+
+  .world {
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    transform-style: preserve-3d;
+    transform: translateY(40px) rotateX(-22deg) rotateY(-38deg);
+  }
+
+  /* Chão sólido: cor única, sem transição nem animação */
+  .floor {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 600px;
+    height: 600px;
+    margin: -300px 0 0 -300px;
+    background: var(--floor);
+    border: 2px solid var(--floor-edge);
+    border-radius: 12px;
+    transform: translateY(calc(var(--h) / 2)) rotateX(90deg);
+  }
+
+  .building {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.22, .61, .36, 1);
+  }
+  .building:hover { transform: translateY(-10px); }
+
+  .face {
+    position: absolute;
+    backface-visibility: hidden;
+    transition: filter .6s cubic-bezier(.22, .61, .36, 1);
+  }
+  .building:hover .face { filter: brightness(1.18); }
+
+  /* Fachada espelhada: reflexo em gradiente + grade de vidros */
+  .wall {
+    inset: 0;
+    background:
+      linear-gradient(115deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,.12) 62%, rgba(255,255,255,0) 100%),
+      repeating-linear-gradient(0deg, rgba(8,16,30,.55) 0 2px, transparent 2px 38px),
+      repeating-linear-gradient(90deg, rgba(8,16,30,.55) 0 2px, transparent 2px 40px),
+      linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+    box-shadow: inset 0 0 0 2px rgba(190,215,240,.35);
+  }
+  .front { transform: translateZ(calc(var(--d) / 2)); }
+  .back  { transform: rotateY(180deg) translateZ(calc(var(--d) / 2)); }
+  .right { transform: rotateY(90deg) translateZ(calc(var(--w) / 2)); filter: brightness(.78); }
+  .left  { transform: rotateY(-90deg) translateZ(calc(var(--w) / 2)); filter: brightness(.6); }
+  .building:hover .right { filter: brightness(.92); }
+  .building:hover .left  { filter: brightness(.74); }
+
+  .roof {
+    width: var(--w);
+    height: var(--d);
+    background: var(--roof);
+    top: calc((var(--h) - var(--d)) / 2);
+    transform: rotateX(90deg) translateZ(calc(var(--h) / 2));
+  }
+</style>
+</head>
+<body>
+  <div class="scene">
+    <div class="world">
+      <div class="floor"></div>
+      <div class="building">
+        <div class="face wall front"></div>
+        <div class="face wall back"></div>
+        <div class="face wall right"></div>
+        <div class="face wall left"></div>
+        <div class="face roof"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
