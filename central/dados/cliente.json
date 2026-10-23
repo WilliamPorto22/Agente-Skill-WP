@@ -1,0 +1,69 @@
+{
+  "_descricao": "Banco de dados do cliente. Fonte unica de verdade para o slide de comparacao. Edite aqui para refletir a carteira real.",
+  "cliente": {
+    "nome": "Cliente Private",
+    "mes_referencia": "set/26"
+  },
+  "meses": [
+    "set/25", "out/25", "nov/25", "dez/25",
+    "jan/26", "fev/26", "mar/26", "abr/26",
+    "mai/26", "jun/26", "jul/26", "ago/26", "set/26"
+  ],
+  "_formato_retornos": "Serie de 13 pontos. Indice 100 em set/25 (ponto 0). Cada ponto representa o valor acumulado da classe/ativo partindo de 100.",
+  "ativos_acoes": [
+    {
+      "ticker": "CXSE3",
+      "classe": "Seguros",
+      "posicao_atual": 8187,
+      "indice_12m": [100.0, 102.1, 104.8, 106.9, 110.4, 113.8, 115.9, 118.2, 120.5, 121.8, 122.6, 123.4, 124.5]
+    },
+    {
+      "ticker": "ITUB4",
+      "classe": "Bancos",
+      "posicao_atual": 7935,
+      "indice_12m": [100.0, 101.6, 103.9, 105.8, 108.6, 111.5, 113.4, 115.6, 117.9, 119.2, 120.1, 120.6, 121.3]
+    },
+    {
+      "ticker": "ITSA4",
+      "classe": "Bancos",
+      "posicao_atual": 7869,
+      "indice_12m": [100.0, 101.4, 103.7, 105.5, 108.2, 111.0, 112.8, 115.0, 117.2, 118.5, 119.4, 120.3, 121.1]
+    },
+    {
+      "ticker": "BERK34",
+      "classe": "Outros",
+      "posicao_atual": 7593,
+      "indice_12m": [100.0, 100.8, 102.0, 103.2, 104.6, 106.0, 107.1, 108.3, 109.4, 110.2, 110.8, 111.3, 111.8]
+    },
+    {
+      "ticker": "YDUQ3",
+      "classe": "Consumo",
+      "posicao_atual": 17732,
+      "indice_12m": [100.0, 99.1, 98.4, 97.6, 98.2, 99.0, 99.4, 100.1, 100.6, 101.2, 101.7, 102.3, 102.7]
+    },
+    {
+      "ticker": "POMO4",
+      "classe": "Automoveis",
+      "posicao_atual": 4988,
+      "indice_12m": [100.0, 97.2, 94.1, 90.8, 88.5, 86.2, 84.9, 83.6, 82.4, 81.0, 80.1, 79.0, 78.3]
+    }
+  ],
+  "benchmarks": {
+    "ibovespa": {
+      "label": "Ibovespa",
+      "indice_12m": [100.0, 106.3, 109.6, 110.8, 124.0, 129.5, 128.3, 128.3, 121.0, 118.3, 122.9, 122.8, 128.5]
+    },
+    "sp500_brl": {
+      "label": "S&P 500 (R$)",
+      "indice_12m": [100.0, 102.3, 102.5, 104.6, 101.9, 100.5, 97.6, 101.9, 105.6, 104.0, 107.3, 111.1, 111.9]
+    },
+    "cdi": {
+      "label": "CDI",
+      "indice_12m": [100.0, 101.1, 102.2, 103.3, 104.4, 105.5, 106.7, 107.9, 109.1, 110.3, 111.5, 112.8, 114.5]
+    },
+    "ipca": {
+      "label": "Inflacao (IPCA)",
+      "indice_12m": [100.0, 100.4, 100.8, 101.2, 101.6, 102.0, 102.4, 102.8, 103.2, 103.6, 103.9, 104.3, 104.6]
+    }
+  }
+}

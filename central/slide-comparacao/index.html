@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suas acoes vs o mercado</title>
+<style>
+  :root {
+    --bg: #0a1428;
+    --bg-grad-1: #0a1428;
+    --bg-grad-2: #0c1933;
+    --ink: #e8f1ff;
+    --ink-dim: #93a7c6;
+    --rule: rgba(255,255,255,0.06);
+    --rule-strong: rgba(255,255,255,0.12);
+    --accent: #6fb3ff;
+
+    --c-portfolio: #22c55e;
+    --c-ibov: #2dd4bf;
+    --c-sp500: #ec4899;
+    --c-cdi: #3b82f6;
+    --c-ipca: #94a3b8;
+
+    --serif: "Instrument Serif", "Playfair Display", Georgia, serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: radial-gradient(ellipse at 20% 0%, var(--bg-grad-2) 0%, var(--bg-grad-1) 60%);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "ss01", "ss02", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 32px;
+  }
+
+  .slide {
+    width: 100%;
+    max-width: 1360px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    padding: 44px 56px 32px;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(45,212,191,0.08), transparent 60%),
+      radial-gradient(1000px 600px at -10% 110%, rgba(59,130,246,0.08), transparent 60%),
+      linear-gradient(180deg, #0b1730 0%, #0a1428 100%);
+    overflow: hidden;
+  }
+
+  .top-bar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(111,179,255,0.9), rgba(111,179,255,0) 60%);
+  }
+
+  .eyebrow {
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .eyebrow::before { content: "• "; }
+
+  .title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 42px;
+    letter-spacing: -0.01em;
+    margin-top: 10px;
+    line-height: 1.05;
+  }
+  .title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .meta {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .pill {
+    font-size: 11px;
+    color: var(--ink-dim);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+  }
+
+  .chart-wrap {
+    margin-top: 18px;
+    position: relative;
+  }
+
+  svg { display: block; width: 100%; height: auto; }
+
+  .grid-line { stroke: var(--rule); stroke-width: 1; }
+  .grid-line.baseline { stroke: var(--rule-strong); stroke-dasharray: 2 4; }
+  .axis-label { fill: var(--ink-dim); font-size: 12px; letter-spacing: 0.04em; }
+
+  .series { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .series.benchmark { stroke-dasharray: 4 5; opacity: 0.95; }
+  .series.portfolio { stroke-width: 2.6; }
+
+  .dot { stroke: var(--bg); stroke-width: 1.5; }
+
+  .end-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .end-label .pct { font-weight: 700; }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--ink-dim);
+    letter-spacing: 0.04em;
+  }
+  .legend .item { display: inline-flex; align-items: center; gap: 8px; }
+  .legend .swatch {
+    width: 22px; height: 2px; border-radius: 2px;
+  }
+  .legend .pct { color: var(--ink); font-weight: 600; margin-left: 4px; }
+
+  .foot {
+    position: absolute;
+    bottom: 14px;
+    left: 56px;
+    right: 56px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--ink-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .error {
+    color: #fca5a5;
+    padding: 12px 16px;
+    border: 1px solid rgba(252,165,165,0.35);
+    border-radius: 10px;
+    background: rgba(127,29,29,0.2);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <main class="slide" role="main">
+    <span class="top-bar" aria-hidden="true"></span>
+    <div class="meta">
+      <span class="pill" id="refMes">—</span>
+      <span class="pill">12 M</span>
+    </div>
+
+    <div class="eyebrow">Suas acoes vs Ibovespa e S&amp;P 500 nos ultimos 12 meses · tudo partindo de 100</div>
+    <h1 class="title">Suas acoes <em>vs o mercado</em></h1>
+
+    <div class="chart-wrap">
+      <div id="chart"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="foot">
+      <span>Fonte: carteira do cliente · benchmarks de mercado</span>
+      <span id="metodo">Media ponderada por posicao em R$ · retornos mensais compostos</span>
+    </div>
+  </main>
+
+<script>
+(async function () {
+  const CORES = {
+    portfolio: getCss("--c-portfolio"),
+    ibov: getCss("--c-ibov"),
+    sp500: getCss("--c-sp500"),
+    cdi: getCss("--c-cdi"),
+    ipca: getCss("--c-ipca"),
+  };
+
+  function getCss(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  const dados = await carregarDados();
+  if (!dados) return;
+
+  document.getElementById("refMes").textContent = (dados.cliente?.mes_referencia || "").toUpperCase();
+
+  const portfolio = calcularPortfolio(dados.ativos_acoes);
+
+  const series = [
+    { key: "ibov", label: dados.benchmarks.ibovespa.label, color: CORES.ibov, dados: dados.benchmarks.ibovespa.indice_12m, dashed: true },
+    { key: "sp500", label: dados.benchmarks.sp500_brl.label, color: CORES.sp500, dados: dados.benchmarks.sp500_brl.indice_12m, dashed: true },
+    { key: "cdi", label: dados.benchmarks.cdi.label, color: CORES.cdi, dados: dados.benchmarks.cdi.indice_12m, dashed: false },
+    { key: "ipca", label: dados.benchmarks.ipca.label, color: CORES.ipca, dados: dados.benchmarks.ipca.indice_12m, dashed: true },
+    { key: "portfolio", label: "Suas acoes", color: CORES.portfolio, dados: portfolio.indice, dashed: false, portfolio: true },
+  ];
+
+  const container = document.getElementById("chart");
+  container.innerHTML = renderSvg(series, dados.meses);
+
+  const legenda = document.getElementById("legend");
+  const ordem = ["portfolio", "ibov", "sp500", "cdi", "ipca"];
+  legenda.innerHTML = ordem.map(k => {
+    const s = series.find(x => x.key === k);
+    const pct = finalPct(s.dados);
+    return `<span class="item">
+      <span class="swatch" style="background:${s.color}"></span>${s.label}
+      <span class="pct" style="color:${s.color}">${formatPct(pct)}</span>
+    </span>`;
+  }).join("");
+
+  async function carregarDados() {
+    try {
+      const resp = await fetch("../dados/cliente.json", { cache: "no-store" });
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      return await resp.json();
+    } catch (err) {
+      document.getElementById("chart").innerHTML =
+        `<div class="error">Nao consegui ler <code>central/dados/cliente.json</code>: ${err.message}. Sirva via HTTP (ex.: <code>python3 -m http.server</code>) para o navegador liberar o fetch.</div>`;
+      return null;
+    }
+  }
+
+  // Media ponderada por posicao em R$, aplicada em CADA MES.
+  // Para cada mes t: retorno_portfolio(t) = SUM(posicao_i * ret_i(t)) / SUM(posicao_i)
+  // ret_i(t) = indice_i(t) / indice_i(t-1) - 1
+  // Depois compoe: indice_portfolio(t) = indice_portfolio(t-1) * (1 + retorno_portfolio(t)), base 100.
+  function calcularPortfolio(ativos) {
+    const n = ativos[0].indice_12m.length;
+    const pesoTotal = ativos.reduce((a, x) => a + x.posicao_atual, 0);
+    const indice = [100];
+    for (let t = 1; t < n; t++) {
+      let retMes = 0;
+      for (const a of ativos) {
+        const r = a.indice_12m[t] / a.indice_12m[t - 1] - 1;
+        retMes += (a.posicao_atual / pesoTotal) * r;
+      }
+      indice.push(indice[t - 1] * (1 + retMes));
+    }
+    const pctFinal = indice[indice.length - 1] - 100;
+    return { indice, pctFinal };
+  }
+
+  function finalPct(serie) { return serie[serie.length - 1] - 100; }
+  function formatPct(v) { const s = v >= 0 ? "+" : ""; return s + v.toFixed(1).replace(".", ",") + "%"; }
+
+  function renderSvg(series, meses) {
+    const W = 1240, H = 460;
+    const M = { top: 24, right: 190, bottom: 44, left: 56 };
+    const iw = W - M.left - M.right;
+    const ih = H - M.top - M.bottom;
+
+    const allVals = series.flatMap(s => s.dados);
+    const vmin = Math.min(...allVals, 100);
+    const vmax = Math.max(...allVals);
+    const pad = (vmax - vmin) * 0.08;
+    const yMin = Math.floor((vmin - pad) / 1) * 1;
+    const yMax = Math.ceil((vmax + pad) / 1) * 1;
+
+    const x = i => M.left + (i / (meses.length - 1)) * iw;
+    const y = v => M.top + ih - ((v - yMin) / (yMax - yMin)) * ih;
+
+    const ticks = niceTicks(yMin, yMax, 4);
+
+    const grid = ticks.map(t => `
+      <line class="grid-line ${t === 100 ? "baseline" : ""}"
+            x1="${M.left}" x2="${W - M.right}" y1="${y(t)}" y2="${y(t)}" />
+      <text class="axis-label" x="${M.left - 10}" y="${y(t) + 4}" text-anchor="end">${Math.round(t)}</text>
+    `).join("");
+
+    const xLabels = meses.map((m, i) => `
+      <text class="axis-label" x="${x(i)}" y="${H - 12}" text-anchor="middle">${m}</text>
+    `).join("");
+
+    const paths = series.map(s => {
+      const d = s.dados.map((v, i) => `${i === 0 ? "M" : "L"} ${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+      const dots = s.portfolio
+        ? s.dados.map((v, i) => `<circle class="dot" cx="${x(i)}" cy="${y(v)}" r="3" fill="${s.color}"></circle>`).join("")
+        : (s.key === "cdi" || s.key === "ipca"
+            ? s.dados.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="2" fill="${s.color}" opacity="0.9"></circle>`).join("")
+            : "");
+      return `
+        <path class="series ${s.dashed ? "benchmark" : ""} ${s.portfolio ? "portfolio" : ""}"
+              d="${d}" stroke="${s.color}"></path>
+        ${dots}
+      `;
+    }).join("");
+
+    const endLabels = (() => {
+      const items = series.map(s => {
+        const v = s.dados[s.dados.length - 1];
+        return { s, v, yv: y(v) };
+      }).sort((a, b) => a.yv - b.yv);
+
+      const minGap = 16;
+      for (let i = 1; i < items.length; i++) {
+        if (items[i].yv - items[i - 1].yv < minGap) {
+          items[i].yv = items[i - 1].yv + minGap;
+        }
+      }
+      return items.map(({ s, v, yv }) => {
+        const pct = formatPct(v - 100);
+        const xText = W - M.right + 12;
+        return `
+          <circle cx="${x(meses.length - 1)}" cy="${y(v)}" r="3.5" fill="${s.color}"></circle>
+          <text class="end-label" x="${xText}" y="${yv + 4}" fill="${s.color}">
+            ${s.label} <tspan class="pct">${pct}</tspan>
+          </text>
+        `;
+      }).join("");
+    })();
+
+    return `
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafico comparativo">
+        ${grid}
+        ${xLabels}
+        ${paths}
+        ${endLabels}
+      </svg>
+    `;
+  }
+
+  function niceTicks(min, max, count) {
+    const step = (max - min) / count;
+    const niceStep = Math.pow(10, Math.floor(Math.log10(step)));
+    const err = step / niceStep;
+    let mult;
+    if (err >= 7.5) mult = 10;
+    else if (err >= 3.5) mult = 5;
+    else if (err >= 1.5) mult = 2;
+    else mult = 1;
+    const s = mult * niceStep;
+    const start = Math.ceil(min / s) * s;
+    const ticks = [];
+    for (let v = start; v <= max; v += s) ticks.push(Math.round(v));
+    if (!ticks.includes(100) && min <= 100 && max >= 100) ticks.push(100);
+    return ticks.sort((a, b) => a - b);
+  }
+})();
+</script>
+</body>
+</html>
