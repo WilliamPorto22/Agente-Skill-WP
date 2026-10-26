@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central de Carteiras</title>
+<meta name="description" content="Carteiras de ações por objetivo, com filtro de resiliência para 2027–2030, a partir da Tabela de Múltiplos do Research XP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header class="topo">
+  <div class="wrap topo__linha">
+    <a class="marca" href="#/">
+      <span class="marca__nome">William Porto</span>
+      <span class="marca__sub">Private · Central de Carteiras</span>
+    </a>
+    <nav class="topo__nav" aria-label="Seções">
+      <a href="#/">Carteiras</a>
+      <a href="#/" data-rolar="filtro">Filtro</a>
+      <a href="#/" data-rolar="metodologia">Metodologia</a>
+      <a href="../">Central</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app" class="wrap" tabindex="-1"></main>
+
+<footer class="rodape">
+  <div class="wrap">
+    <p><strong>Aviso importante.</strong> Material informativo elaborado a partir de dados públicos do Research XP (Tabela de Múltiplos), sem constituir oferta, recomendação individual ou consultoria de investimentos. Recomendações, preços-alvo e projeções são de responsabilidade dos analistas da XP e podem ser revisados a qualquer momento. A seleção das carteiras resulta de um filtro quantitativo com premissas qualitativas descritas na metodologia. Ações são investimentos de renda variável, sujeitos a perdas, inclusive do capital investido. Rentabilidade passada não garante resultados futuros. Antes de investir, verifique a adequação do produto ao seu perfil (suitability).</p>
+  </div>
+</footer>
+
+<div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+<script src="dados-xp.js"></script>
+<script src="perfis.js"></script>
+<script src="motor.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
