@@ -49,20 +49,16 @@
     avisar.t = setTimeout(() => el.classList.remove("visivel"), 2400);
   }
 
-  async function copiar(texto) {
+  async function copiar(campo) {
     try {
-      await navigator.clipboard.writeText(texto);
+      await navigator.clipboard.writeText(campo.value);
+      avisar("Mensagem copiada. É só colar no WhatsApp.");
     } catch (e) {
-      const t = document.createElement("textarea");
-      t.value = texto;
-      t.style.position = "fixed";
-      t.style.opacity = "0";
-      document.body.appendChild(t);
-      t.select();
-      document.execCommand("copy");
-      t.remove();
+      campo.focus();
+      campo.select();
+      const ok = document.execCommand && document.execCommand("copy");
+      avisar(ok ? "Mensagem copiada. É só colar no WhatsApp." : "Texto selecionado: use Copiar do seu aparelho.");
     }
-    avisar("Mensagem copiada. É só colar no WhatsApp.");
   }
 
   // ---------- cálculo ----------
@@ -211,7 +207,7 @@
     return `
     <article class="card${destaque ? " card--destaque" : ""}">
       <span class="card__selo">${esc(d.selo)}</span>
-      <h3><a class="card__link" href="#/carteira/${id}" style="color:inherit">${esc(d.nome)}</a></h3>
+      <h3><a class="card__link" href="#${id}" style="color:inherit">${esc(d.nome)}</a></h3>
       <p class="card__obj">${esc(d.objetivo)}</p>
       <dl class="kpis">
         <div class="kpi"><dt>Ativos</dt><dd>${r.ativos.length}</dd></div>
@@ -226,7 +222,7 @@
 
   function carteiras() {
     return `
-    <section aria-labelledby="cart-t">
+    <section id="carteiras" aria-labelledby="cart-t">
       <div class="secao-cab"><span class="rotulo">Carteiras por objetivo</span><h2 class="titulo-secao" id="cart-t">Escolha o objetivo, abra a carteira e envie ao cliente</h2>
       <p class="sub-secao">Cada carteira tem mandato, perfil e filtros próprios. A composição é recalculada automaticamente com os dados do Research XP e com as cotações informadas acima.</p></div>
       <div class="grade">${ORDEM.map(cardCarteira).join("")}</div>
@@ -411,7 +407,7 @@
     const d = r.def, s = resumo(r);
     const simulado = estado.choque !== 0;
     app.innerHTML = `
-    <a class="voltar" href="#/">← Todas as carteiras</a>
+    <a class="voltar" href="#inicio">← Todas as carteiras</a>
     <section class="detalhe">
       <header class="detalhe__cab">
         <span class="card__selo">${esc(d.selo)}</span>
@@ -479,9 +475,10 @@
   }
 
   // ---------- roteamento e eventos ----------
+  // Âncoras simples (#blindagem, #filtro) para funcionar também em visualizadores que só repassam #token.
   function rota() {
-    const m = location.hash.match(/^#\/carteira\/([\w-]+)/);
-    if (m) detalhe(m[1]);
+    const id = location.hash.slice(1);
+    if (resultados[id]) detalhe(id);
     else inicio();
   }
 
@@ -505,7 +502,7 @@
       document.getElementById("ranking-n").textContent = contagem(n);
     } else if (t.id === "m-cliente") {
       estado.cliente = t.value;
-      document.getElementById("m-texto").value = mensagem(resultados[location.hash.split("/")[2]]);
+      document.getElementById("m-texto").value = mensagem(resultados[location.hash.slice(1)]);
       atualizarWhats();
     } else if (t.id === "m-texto") {
       atualizarWhats();
@@ -554,20 +551,16 @@
       estado.formato = b.dataset.formato;
       redesenhar();
     } else if (b.id === "m-copiar") {
-      copiar(document.getElementById("m-texto").value);
+      copiar(document.getElementById("m-texto"));
     }
   });
 
-  document.querySelectorAll("[data-rolar]").forEach((a) =>
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      const alvoId = a.dataset.rolar;
-      if (location.hash.startsWith("#/carteira")) { location.hash = "#/"; setTimeout(() => document.getElementById(alvoId)?.scrollIntoView(), 50); }
-      else document.getElementById(alvoId)?.scrollIntoView();
-    })
-  );
-
-  window.addEventListener("hashchange", () => { rota(); window.scrollTo(0, 0); });
+  window.addEventListener("hashchange", () => {
+    rota();
+    const secao = document.getElementById(location.hash.slice(1));
+    if (secao) secao.scrollIntoView();
+    else window.scrollTo(0, 0);
+  });
   recalcular();
   rota();
 })();
