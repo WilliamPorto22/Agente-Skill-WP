@@ -229,7 +229,25 @@
     criterios: ["Brasil: receita majoritariamente em dólar", "Brasil: valor de mercado ≥ R$ 15 bi, Dív. Líq./EBITDA ≤ 3,5x, P/L 2027 ≤ 30x", "Brasil: sem estatais com histórico de interferência e sem Venda XP", "Brasil: as 5 maiores notas da Blindagem, máx. 2 por setor", "EUA: líderes globais de qualidade (seleção qualitativa)", "Múltiplos dos EUA não constam da tabela XP: consultar o Research Internacional"],
   };
 
-  const api = { preparar, montar, montarGlobal, pontuar, cambioImplicito, CARTEIRAS, GLOBAL, PILARES, AJUSTES, grupo };
+  // Médias ponderadas da parte brasileira de uma carteira montada.
+  function resumo(r) {
+    const br = r.ativos.filter((a) => !a.externo);
+    const pond = (k) => {
+      const v = br.filter((a) => a[k] != null);
+      const w = v.reduce((s, a) => s + a.peso, 0);
+      return w ? v.reduce((s, a) => s + a[k] * a.peso, 0) / w : null;
+    };
+    return {
+      dy: pond("dy27"),
+      roe: pond("roe"),
+      pl: pond("pl27"),
+      upside: pond("upside"),
+      dolar: r.ativos.filter((a) => a.externo || a.perfil.usd === 2).reduce((s, a) => s + a.peso, 0),
+      setores: new Set(r.ativos.map((a) => a.setor)).size,
+    };
+  }
+
+  const api = { preparar, montar, montarGlobal, pontuar, resumo, cambioImplicito, CARTEIRAS, GLOBAL, PILARES, AJUSTES, grupo };
   if (typeof module !== "undefined") module.exports = api;
   else raiz.Motor = api;
 })(this);

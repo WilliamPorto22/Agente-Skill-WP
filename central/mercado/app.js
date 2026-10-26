@@ -72,22 +72,7 @@
     ativos.forEach((a) => (a.em = ORDEM.filter((id) => resultados[id].ativos.some((x) => x.ticker === a.ticker))));
   }
 
-  function resumo(r) {
-    const br = r.ativos.filter((a) => !a.externo);
-    const pond = (k) => {
-      const v = br.filter((a) => a[k] != null);
-      const w = v.reduce((s, a) => s + a.peso, 0);
-      return w ? v.reduce((s, a) => s + a[k] * a.peso, 0) / w : null;
-    };
-    return {
-      dy: pond("dy27"),
-      roe: pond("roe"),
-      pl: pond("pl27"),
-      upside: pond("upside"),
-      dolar: r.ativos.filter((a) => a.externo || a.perfil.usd === 2).reduce((s, a) => s + a.peso, 0),
-      setores: new Set(r.ativos.map((a) => a.setor)).size,
-    };
-  }
+  const resumo = M.resumo;
 
   function basePrecos() {
     const n = Object.keys(estado.cotacoes.precos).length;
@@ -153,6 +138,7 @@
           <span>Câmbio implícito <strong>R$ ${nf(M.cambioImplicito(D), 2)}</strong></span>
           <span>Research XP de <strong>${esc(D.dataBase)}</strong></span>
         </div>
+        <div class="acoes" style="margin-top:20px"><a class="btn btn--ouro" href="apresentacao.html">Abrir modo apresentação →</a><a class="btn" href="#carteiras">Ver carteiras</a></div>
       </div>
       <aside class="painel" aria-labelledby="painel-titulo">
         <div class="alerta"><span>⚠</span><span><b>Preços-base anteriores ao 2º turno.</b> Atualize as cotações do dia ou simule a queda para recalcular dividendos, P/L, upside e a composição das carteiras. Os preços-alvo da XP podem ser revisados após a eleição.</span></div>
