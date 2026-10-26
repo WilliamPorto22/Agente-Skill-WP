@@ -55,6 +55,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .topo__nav { display: flex; gap: 4px; flex-wrap: wrap; }
 .topo__nav a { color: var(--muted); padding: 6px 10px; border-radius: 8px; font-size: 14px; }
 .topo__nav a:hover { color: var(--text); background: var(--surface); }
+.topo__nav a.nav-destaque { color: #1a1406; background: var(--gold); font-weight: 600; }
+.topo__nav a.nav-destaque:hover { background: var(--gold-forte); color: #1a1406; }
 
 main { padding-top: 28px; padding-bottom: 56px; outline: none; }
 section + section { margin-top: 56px; }
