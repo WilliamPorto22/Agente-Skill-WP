@@ -188,6 +188,17 @@ textarea { resize: vertical; min-height: 84px; font-family: ui-monospace, SFMono
 .metricas dt { font-size: 11px; color: var(--faint); }
 .metricas dd { margin: 0; font-weight: 600; font-size: 14px; white-space: nowrap; }
 .tese { font-size: 14px; color: var(--text); opacity: .9; }
+.ativo__classe { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); background: var(--gold-suave); border: 1px solid rgba(212, 180, 108, .35); padding: 2px 8px; border-radius: 999px; vertical-align: middle; }
+
+/* Pocket — "Entenda em 10 segundos" */
+.pocket { background: linear-gradient(180deg, var(--gold-suave), rgba(212, 180, 108, .03)); border: 1px solid rgba(212, 180, 108, .35); border-left: 3px solid var(--gold); border-radius: 10px; padding: 12px 14px; }
+.pocket__rotulo { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-forte); margin-bottom: 8px; }
+.pocket dl { display: grid; grid-template-columns: 1fr; gap: 8px 14px; margin: 0; }
+@media (min-width: 560px) { .pocket dl { grid-template-columns: 150px 1fr; } .pocket dl > div { display: contents; } }
+.pocket dl > div { display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; align-items: baseline; }
+@media (min-width: 560px) { .pocket dl > div { display: contents; } }
+.pocket dt { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.pocket dd { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { font-size: 11.5px; border-radius: 6px; padding: 2px 8px; border: 1px solid transparent; background: var(--bg-2); color: var(--muted); }
 .tag--pos { background: var(--pos-suave); color: var(--pos); border-color: rgba(76, 197, 149, .3); }

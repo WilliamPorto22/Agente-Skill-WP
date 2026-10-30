@@ -329,6 +329,23 @@
     document.title = "Central de Carteiras";
   }
 
+  // Bloco pocket "Entenda em 10 segundos": o que é, setor-foco e a que o cliente fica exposto.
+  function pocket(a) {
+    const p = a.perfil || {};
+    const linhas = [];
+    if (p.oque) linhas.push(["O que é", p.oque]);
+    if (p.subsetor) linhas.push(["Setor-foco", p.subsetor]);
+    if (p.expoeA) linhas.push(["Exposição do cliente", p.expoeA]);
+    if (p.top) linhas.push(["Principais posições", p.top]);
+    if (p.taxa) linhas.push(["Taxa", p.taxa]);
+    if (!linhas.length) return "";
+    return `
+      <div class="pocket" aria-label="Entenda em 10 segundos">
+        <span class="pocket__rotulo">Entenda em 10 segundos</span>
+        <dl>${linhas.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+      </div>`;
+  }
+
   // ---------- detalhe ----------
   function cartaoAtivo(a, i) {
     const metricas = a.externo
@@ -341,13 +358,18 @@
           <div><dt>ROE</dt><dd>${pct(a.roe, 0)}</dd></div>
           <div><dt>DY 2027</dt><dd>${pct(a.dy27)}</dd></div>
         </dl>`;
+    const classeExt = a.perfil && a.perfil.classe ? `<span class="ativo__classe">${esc(a.perfil.classe)}</span>` : "";
     return `
     <article class="ativo">
       <div class="ativo__topo">
         <span class="ativo__pos">${i + 1}</span>
-        <div class="ativo__id"><div class="ativo__ticker">${esc(a.ticker)}</div><div class="ativo__nome">${esc(a.nome)} · ${esc(a.setor)}${a.mcap ? " · " + bi(a.mcap) : ""}</div></div>
+        <div class="ativo__id">
+          <div class="ativo__ticker">${esc(a.ticker)}${classeExt}</div>
+          <div class="ativo__nome">${esc(a.nome)} · ${esc(a.setor)}${a.mcap ? " · " + bi(a.mcap) : ""}</div>
+        </div>
         <div class="ativo__peso"><strong>${a.peso}%</strong><small>peso</small></div>
       </div>
+      ${pocket(a)}
       ${metricas}
       ${a.perfil.tese ? `<p class="tese">${esc(a.perfil.tese)}</p>` : ""}
       <div class="tags">${tags(a)}</div>

@@ -185,16 +185,56 @@
   ];
 
   const GLOBAL_EUA = [
-    ["MSFT34", "Microsoft", "Nuvem (Azure) e software corporativo, com liderança em IA aplicada a empresas."],
-    ["GOGL34", "Alphabet (Google)", "Busca, YouTube e Google Cloud, com geração de caixa gigantesca."],
-    ["AMZO34", "Amazon", "E-commerce e AWS, a maior plataforma de nuvem do mundo."],
-    ["AAPL34", "Apple", "Ecossistema com mais de 2 bilhões de dispositivos ativos e recompras recorrentes."],
-    ["NVDC34", "Nvidia", "Infraestrutura de IA: chips e software dominantes em data centers."],
-    ["M1TA34", "Meta", "Facebook, Instagram e WhatsApp, com mais de 3 bilhões de usuários diários."],
-    ["BERK34", "Berkshire Hathaway", "Conglomerado de Warren Buffett: seguros, ferrovia e energia, com caixa elevado."],
-    ["VISA34", "Visa", "Pedágio sobre pagamentos digitais no mundo, com margens acima de 50%."],
-    ["JPMC34", "JPMorgan", "Maior banco dos EUA e referência em gestão de risco."],
-    ["LILY34", "Eli Lilly", "Líder em tratamentos para obesidade e diabetes."],
+    ["MSFT34", "Microsoft", "Nuvem (Azure) e software corporativo, com liderança em IA aplicada a empresas.", {
+      oque: "Vende software corporativo (Windows, Office 365), nuvem (Azure) e licenças de IA via parceria com a OpenAI.",
+      subsetor: "Tecnologia — nuvem e software empresarial",
+      expoeA: "Gasto global de empresas com nuvem e produtividade; receita quase toda em assinatura (recorrente).",
+    }],
+    ["GOGL34", "Alphabet (Google)", "Busca, YouTube e Google Cloud, com geração de caixa gigantesca.", {
+      oque: "Dona do Google Busca, YouTube, Android, Chrome, Gmail, Google Cloud e Waymo (carros autônomos).",
+      subsetor: "Tecnologia — publicidade digital e nuvem",
+      expoeA: "Mercado global de publicidade online + corrida da IA + crescimento do Google Cloud.",
+    }],
+    ["AMZO34", "Amazon", "E-commerce e AWS, a maior plataforma de nuvem do mundo.", {
+      oque: "Maior e-commerce do mundo + AWS (líder em nuvem) + Prime Video + logística própria.",
+      subsetor: "Tecnologia — e-commerce e nuvem",
+      expoeA: "Consumo online nos EUA e Europa + gasto corporativo com nuvem (margem alta).",
+    }],
+    ["AAPL34", "Apple", "Ecossistema com mais de 2 bilhões de dispositivos ativos e recompras recorrentes.", {
+      oque: "Fabrica iPhone, Mac, iPad, Watch e vende serviços (App Store, iCloud, Apple Music, Apple TV+).",
+      subsetor: "Tecnologia — hardware e serviços",
+      expoeA: "Base instalada de 2 bilhões de dispositivos + crescimento de receita recorrente de serviços.",
+    }],
+    ["NVDC34", "Nvidia", "Infraestrutura de IA: chips e software dominantes em data centers.", {
+      oque: "Projeta GPUs (H100, H200, Blackwell) usadas para treinar modelos de IA + software CUDA.",
+      subsetor: "Tecnologia — semicondutores de IA",
+      expoeA: "Investimento global em infraestrutura de IA generativa (CapEx das big techs).",
+    }],
+    ["M1TA34", "Meta", "Facebook, Instagram e WhatsApp, com mais de 3 bilhões de usuários diários.", {
+      oque: "Dona de Facebook, Instagram, WhatsApp, Messenger, Threads e Reality Labs (óculos/metaverso).",
+      subsetor: "Tecnologia — redes sociais e publicidade",
+      expoeA: "Mercado global de publicidade digital + alavancagem operacional em IA.",
+    }],
+    ["BERK34", "Berkshire Hathaway", "Conglomerado de Warren Buffett: seguros, ferrovia e energia, com caixa elevado.", {
+      oque: "Holding de Warren Buffett: GEICO (seguros), BNSF (ferrovia), energia, Dairy Queen, See's Candies + grande participação na Apple.",
+      subsetor: "Conglomerado diversificado (seguros + indústria)",
+      expoeA: "Economia americana real + float gigantesco de seguros + caixa de US$ 300+ bilhões.",
+    }],
+    ["VISA34", "Visa", "Pedágio sobre pagamentos digitais no mundo, com margens acima de 50%.", {
+      oque: "Opera a maior rede de cartões de crédito e débito do mundo — recebe um pedágio em cada compra.",
+      subsetor: "Pagamentos — infraestrutura",
+      expoeA: "Volume global de compras com cartão (cresce com inflação e digitalização).",
+    }],
+    ["JPMC34", "JPMorgan", "Maior banco dos EUA e referência em gestão de risco.", {
+      oque: "Maior banco dos EUA: varejo (Chase), banco de investimento, gestão de patrimônio e tesouraria.",
+      subsetor: "Bancos — líder EUA",
+      expoeA: "Crédito nos EUA, mercado de capitais americano e taxas de juros do Fed.",
+    }],
+    ["LILY34", "Eli Lilly", "Líder em tratamentos para obesidade e diabetes.", {
+      oque: "Fabrica Mounjaro e Zepbound (obesidade/diabetes) + Trulicity + remédios para câncer e Alzheimer.",
+      subsetor: "Farmacêutica — GLP-1 (obesidade e diabetes)",
+      expoeA: "Explosão do mercado global de GLP-1 (perda de peso); pipeline forte em oncologia.",
+    }],
   ];
 
   const elegivelGlobal = (a) =>
@@ -213,7 +253,7 @@
       sel.push({ ...a, peso: 6 });
       if (sel.length === 5) break;
     }
-    const eua = GLOBAL_EUA.map(([ticker, nome, tese]) => ({ ticker, nome, setor: "EUA (BDR)", peso: 7, externo: true, perfil: { tese } }));
+    const eua = GLOBAL_EUA.map(([ticker, nome, tese, extra]) => ({ ticker, nome, setor: "EUA (BDR)", peso: 7, externo: true, perfil: Object.assign({ tese }, extra || {}) }));
     return { ativos: sel.concat(eua), elegiveis: br.length };
   }
 
